@@ -10,7 +10,7 @@ public class Agent : MonoBehaviour
 
     public virtual void MoveTo(Transform point) {}
 
-    public virtual void Shoot() {}
+    public virtual void Shoot(Transform targetLook) {}
 
     public virtual void Alert() {}
 

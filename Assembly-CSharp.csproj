@@ -45,10 +45,10 @@
      <Compile Include="Assets\Samples\Universal RP\12.1.6\URP Package Samples\RendererFeatures\KeepFrame\KeepFrameFeature.cs" />
      <Compile Include="Assets\FieldOfView.cs" />
      <Compile Include="Assets\State.cs" />
+     <Compile Include="Assets\EventsController.cs" />
      <Compile Include="Assets\AttackState.cs" />
      <Compile Include="Assets\Enemy.cs" />
      <Compile Include="Assets\Agent.cs" />
-     <Compile Include="Assets\EventsController.cs" />
      <None Include="Assets\NavMeshComponents-master\ProjectSettings\ProjectVersion.txt" />
      <None Include="Assets\Samples\Universal RP\12.1.6\URP Package Samples\SharedAssets\Shaders\3DText.shader" />
     <Reference Include="UnityEngine">

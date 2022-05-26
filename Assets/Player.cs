@@ -8,6 +8,8 @@ public class Player : Agent
     public Vector3 moveDir;
     [HideInInspector]
     public CharacterController controller;
+
+    public Transform aimTarget;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,6 +24,8 @@ public class Player : Agent
     }
     void PlayerController() 
     {
+        if (Input.GetMouseButtonDown(0)) Shoot(GetTargetAimForGun());
+
         if (controller.isGrounded && Input.GetButton("Jump")) {
          moveDir.y = 3f;
         }
@@ -36,8 +40,20 @@ public class Player : Agent
 
             moveDir.x = direction.x * speed;
             moveDir.z = direction.z * speed;
-
-            controller.Move(moveDir * Time.deltaTime);
         }
+        controller.Move(moveDir * Time.deltaTime);
+    }
+    public override void Shoot(Transform targetLook) 
+    {
+        if (GetComponentInChildren<Gun>()) 
+        {
+            GetComponentInChildren<Gun>().Shoot(targetLook);
+        }
+    }
+    Transform GetTargetAimForGun() 
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(GetComponentInChildren<Camera>().transform.position, GetComponentInChildren<Camera>().transform.forward, out hit, 100.0f)) aimTarget.position = hit.point;
+        return aimTarget;
     }
 }

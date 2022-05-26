@@ -30,6 +30,6 @@ public class AttackState : State
         {
             character.MoveTo(target);
         }
-        else character.Shoot();
+        else character.Shoot(target);
     }
 }
