@@ -6,18 +6,19 @@ public class Player : Agent
 {
     [HideInInspector]
     public Vector3 moveDir;
-    [HideInInspector]
-    public CharacterController controller;
 
     float startHeigth;
 
     public Transform aimTarget;
     public Transform cameraTransform;
+    Rigidbody rigi;
+    public float JumpForce;
     // Start is called before the first frame update
     void Start()
     {
-        controller = gameObject.GetComponent<CharacterController>();
         startHeigth = transform.position.y;
+        rigi = GetComponent<Rigidbody>();
+        rigi.maxAngularVelocity = 0f;
     }
 
     // Update is called once per frame
@@ -35,10 +36,11 @@ public class Player : Agent
         if (Input.GetMouseButtonDown(0)) Shoot(GetTargetAimForGun());
         if (transform.position.y < startHeigth-10) Invoke("EndGame", 2.0f);
 
-        if (controller.isGrounded && Input.GetButton("Jump")) {
-         moveDir.y = 3f;
+        if (Input.GetButton("Jump")) {
+            rigi.maxAngularVelocity = 3f;
+            rigi.AddForce(Vector3.up * JumpForce, ForceMode.Impulse);
         }
-        moveDir.y -= 9.8f * Time.deltaTime;
+        else rigi.maxAngularVelocity = 0f;
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
@@ -50,7 +52,7 @@ public class Player : Agent
             moveDir.x = direction.x * speed;
             moveDir.z = direction.z * speed;
         }
-        controller.Move(moveDir * Time.deltaTime);
+        rigi.velocity = new Vector3 (moveDir.x, rigi.velocity.y, moveDir.z);
     }
     Transform GetTargetAimForGun() 
     {

@@ -28,7 +28,11 @@ public class Bullet : MonoBehaviour
         g.transform.parent = transform;
         
         if (other.GetComponent<Agent>()) other.GetComponent<Agent>().Damage(Damage);
-        else Invoke("Destroy", 1.0f);
+        else 
+        {
+            EventsController.Instance.missEvents.increaseCount(1);
+            Invoke("Destroy", 1.0f);
+        }
     }
     private IEnumerator LifeCycle(float waitTime)
     {
@@ -37,7 +41,7 @@ public class Bullet : MonoBehaviour
     }
     void Destroy() 
     {
-        EventsController.Instance.missEvents.increaseCount(1);
+        if (!touched) EventsController.Instance.missEvents.increaseCount(1);
         Destroy(gameObject);
     }
 }

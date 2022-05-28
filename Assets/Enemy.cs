@@ -8,6 +8,7 @@ public class Enemy : Agent
     private State currentState;
     private FieldOfView FieldOfView;
     NavMeshAgent navMeshAgent;
+    Rigidbody rigi;
 
     public Material DefaultMat;
     public Material AimMat;
@@ -18,6 +19,8 @@ public class Enemy : Agent
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.speed = speed;
         SetState(new WalkState(this));
+        rigi = GetComponent<Rigidbody>();
+        rigi.maxAngularVelocity = 5f;
     }
 
     void Update() 
@@ -69,8 +72,6 @@ public class Enemy : Agent
         Vector3 finalPosition = hit.position;
         //Debug.Log(finalPosition);
         navMeshAgent.destination = finalPosition;
-        //navMeshAgent.SetDestination(finalPosition);
-        //agent.SetDestination (Random.insideUnitSphere * 350);
     }
     public bool MoveStop(Transform target)
     {
