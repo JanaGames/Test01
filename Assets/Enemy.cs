@@ -9,9 +9,14 @@ public class Enemy : Agent
     private FieldOfView FieldOfView;
     NavMeshAgent navMeshAgent;
 
+    public Material DefaultMat;
+    public Material AimMat;
+    public bool onAim;
+
     void Start() 
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        navMeshAgent.speed = speed;
         SetState(new WalkState(this));
     }
 
@@ -19,6 +24,7 @@ public class Enemy : Agent
     {
         if (CheckLive()) 
         {
+            GetComponent<Renderer>().material = onAim ? AimMat : DefaultMat;
             currentState.Play();
         }
         else Dead();
@@ -43,6 +49,16 @@ public class Enemy : Agent
             FaceTarget(transform, point);
             navMeshAgent.destination = point.position;
         }
+    }
+    public override void Damage(float damage)
+    {
+        base.Damage(damage);
+        EventsController.Instance.attackEvents.increaseCount(1);
+    }
+    public override void Dead()
+    {
+        base.Dead();
+        EventsController.Instance.killEvents.increaseCount(1);
     }
     public void MoveToRandom(float radius)
     {
@@ -81,5 +97,12 @@ public class Enemy : Agent
         Vector3 direction = (target.position - origin.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
         origin.rotation = Quaternion.Slerp(origin.rotation, lookRotation, Time.deltaTime * 10f);
+    }
+    private IEnumerator SetAsOnAim(float waitTime)
+    {
+        onAim = true;
+        yield return new WaitForSeconds(waitTime);
+        onAim = false;
+        yield break;
     }
 }

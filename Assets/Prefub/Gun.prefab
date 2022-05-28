@@ -112,7 +112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefub: {fileID: 9009728466441151317, guid: 20994a0cd9473b14a9b0cda982f98028, type: 3}
-  speed: 25
+  speed: 20
   shootPos: {fileID: 29695039781332597}
   ShootingDelay: 1
   Damage: 1

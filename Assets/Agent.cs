@@ -10,7 +10,13 @@ public class Agent : MonoBehaviour
 
     public virtual void MoveTo(Transform point) {}
 
-    public virtual void Shoot(Transform targetLook) {}
+    public virtual void Shoot(Transform targetLook) 
+    {
+        if (GetComponentInChildren<Gun>()) 
+        {
+            GetComponentInChildren<Gun>().Shoot(targetLook);
+        }
+    }
 
     public virtual void Alert() {}
 
@@ -24,5 +30,9 @@ public class Agent : MonoBehaviour
     public virtual void Dead() 
     {
         StopAllCoroutines();
+    }
+    public virtual void Damage(float damage) 
+    {
+        health -= damage;
     }
 }

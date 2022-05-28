@@ -30,6 +30,11 @@ public class AttackState : State
         {
             character.MoveTo(target);
         }
-        else character.Shoot(target);
+        else if (target.GetComponent<Agent>().health > 0) 
+        {
+            character.MoveTo(enemy.transform);
+            character.Shoot(target);
+        }
+        else enemy.SetState(new WalkState(character));
     }
 }

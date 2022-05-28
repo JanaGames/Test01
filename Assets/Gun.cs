@@ -25,6 +25,7 @@ public class Gun : MonoBehaviour
             readyShoot = false;
             GameObject bullet = Instantiate(bulletPrefub, shootPos.position, shootPos.rotation)                          
                 as GameObject;
+            bullet.GetComponent<Bullet>().Load(3.0f, Damage);
             bullet.GetComponent<Rigidbody>().velocity = transform.TransformDirection(new Vector3(0, 0, speed));
             Invoke("SetReadyShoot", ShootingDelay);
         }

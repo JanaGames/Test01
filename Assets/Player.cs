@@ -9,22 +9,31 @@ public class Player : Agent
     [HideInInspector]
     public CharacterController controller;
 
+    float startHeigth;
+
     public Transform aimTarget;
+    public Transform cameraTransform;
     // Start is called before the first frame update
     void Start()
     {
         controller = gameObject.GetComponent<CharacterController>();
+        startHeigth = transform.position.y;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (CheckLive()) PlayerController();
+        if (CheckLive()) 
+        {
+            SetMaterialByAim();
+            PlayerController();
+        }
         else Dead();
     }
     void PlayerController() 
     {
         if (Input.GetMouseButtonDown(0)) Shoot(GetTargetAimForGun());
+        if (transform.position.y < startHeigth-10) Invoke("EndGame", 2.0f);
 
         if (controller.isGrounded && Input.GetButton("Jump")) {
          moveDir.y = 3f;
@@ -43,17 +52,29 @@ public class Player : Agent
         }
         controller.Move(moveDir * Time.deltaTime);
     }
-    public override void Shoot(Transform targetLook) 
-    {
-        if (GetComponentInChildren<Gun>()) 
-        {
-            GetComponentInChildren<Gun>().Shoot(targetLook);
-        }
-    }
     Transform GetTargetAimForGun() 
     {
         RaycastHit hit;
-        if (Physics.Raycast(GetComponentInChildren<Camera>().transform.position, GetComponentInChildren<Camera>().transform.forward, out hit, 100.0f)) aimTarget.position = hit.point;
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, 100.0f)) aimTarget.position = hit.point;
         return aimTarget;
+    }
+    public override void Dead() 
+    {
+        base.Dead();
+        Invoke("EndGame", 2.0f);
+    }
+    void SetMaterialByAim() 
+    {
+        //Debug.Log("kek1");
+        RaycastHit hit;
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, 100.0f, 1 << 7)) 
+        {
+            if (hit.transform.GetComponent<Enemy>() && !hit.transform.GetComponent<Enemy>().onAim) hit.transform.GetComponent<Enemy>().StartCoroutine("SetAsOnAim", 0.5f);
+        }
+    }
+    //GameManager.cs
+    void EndGame() 
+    {
+        GameManager.Instance.EndGame();
     }
 }
